@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.tag.R;
 
@@ -16,12 +17,19 @@ public class SplashActivity extends AppCompatActivity {
 
     Animation leftAnim;
     ImageView imageView;
+    TextView splashTitle;
+
+    CharSequence charSequence;
+    int index;
+    long delay = 200;
+    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        splashTitle = findViewById(R.id.splashTitle);
         leftAnim = AnimationUtils.loadAnimation(this, R.anim.left_animation);
         imageView = findViewById(R.id.splashImageView);
 
@@ -35,5 +43,30 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }
         }, splashTime);
+
+        animateText("TAG");
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            splashTitle.setText(charSequence.subSequence(0, index++));
+
+            if (index <= charSequence.length()){
+                handler.postDelayed(runnable,delay);
+            }
+        }
+    };
+
+    public void animateText(CharSequence cs){
+        charSequence = cs;
+
+        index = 0;
+
+        splashTitle.setText("");
+
+        handler.removeCallbacks(runnable);
+
+        handler.postDelayed(runnable, delay);
     }
 }
