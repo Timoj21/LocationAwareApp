@@ -5,9 +5,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
-import android.view.View;
 
-import com.example.tag.ChooseFragment;
 import com.example.tag.PlayFragment;
 import com.example.tag.R;
 import com.example.tag.SettingsFragment;
@@ -16,13 +14,9 @@ public class MainActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager;
 
-    private ChooseFragment chooseFragment;
     private PlayFragment playFragment;
     private SettingsFragment settingsFragment;
 
-    private AppCompatButton chooseButton;
-    private AppCompatButton playButton;
-    private AppCompatButton settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,57 +24,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initialize();
-        setClickListeners();
     }
 
     //Initialize all views
     public void initialize(){
-        this.fragmentManager = fragmentManager = getSupportFragmentManager();
+        this.fragmentManager = getSupportFragmentManager();
 
-        this.chooseFragment = new ChooseFragment();
         this.playFragment = new PlayFragment();
         this.settingsFragment = new SettingsFragment();
 
-        this.chooseButton = findViewById(R.id.chooseButton);
-        this.playButton = findViewById(R.id.homeButton);
-        this.settingsButton = findViewById(R.id.settingsButton);
-
-        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, this.chooseFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.mainFragmentContainer, this.playFragment).commit();
     }
 
-    //Set all on-click listeners
-    public void setClickListeners(){
-        this.chooseButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                toChooseView();
-            }
-        });
-
-        this.playButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                toPlayView();
-            }
-        });
-
-        this.settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toSettingsView();
-            }
-        });
+    public void toSettingsFragment(){
+        fragmentManager.beginTransaction().replace(R.id.mainFragmentContainer, this.settingsFragment).commit();
     }
 
-    public void toChooseView(){
-        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, this.chooseFragment).commit();
-    }
-
-    public void toPlayView(){
-        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, this.playFragment).commit();
-    }
-
-    public void toSettingsView(){
-        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, this.settingsFragment).commit();
+    public void toPlayFragment(){
+        fragmentManager.beginTransaction().replace(R.id.mainFragmentContainer, this.playFragment).commit();
     }
 }
