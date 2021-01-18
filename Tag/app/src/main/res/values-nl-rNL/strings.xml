@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tag</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="host_join_text">Welkom bij Tag\nWat wil je doen?</string>
+    <string name="host_game">Host Game</string>
+    <string name="join_game">Join Game</string>
+
+    <string name="game_pin">Voer de game pin in:</string>
+
+    <string name="player_amount">Hoeveel spelers wil je?</string>
+
+    <string name="valid_game_pin">Voer een geldige game pin in</string>
+    <string name="valid_player_amount">Voer een speler aantal in</string>
+
+    <string name="settings">Instellingen</string>
+    <string name="how_to_play_title">Hoe te spelen</string>
+    <string name="how_to_play_text">Hier nog tekst</string>
+    <string name="new_game_button">Nieuw spel</string>
+    <string name="new_game_text">Als je een nieuw spel wil spelen, klik dan op de onderstaande knop</string>
+
+    <string name="new_game_sure">Weet je zeker dat je een nieuw spel wilt starten?</string>
+
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+</resources>
