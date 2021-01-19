@@ -1,19 +1,13 @@
-package com.example.tag.gui;
+package com.example.tag.gui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.example.tag.PlayFragment;
+import com.example.tag.gui.fragment.PlayFragment;
 import com.example.tag.R;
-import com.example.tag.SettingsFragment;
-
-import java.util.ArrayList;
+import com.example.tag.gui.fragment.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
 

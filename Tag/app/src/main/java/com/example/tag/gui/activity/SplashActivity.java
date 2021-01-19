@@ -1,4 +1,4 @@
-package com.example.tag.gui;
+package com.example.tag.gui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 

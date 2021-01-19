@@ -1,14 +1,13 @@
-package com.example.tag.gui;
+package com.example.tag.gui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
-import com.example.tag.HostFragment;
-import com.example.tag.HostJoinFragment;
-import com.example.tag.JoinFragment;
+import com.example.tag.gui.fragment.HostFragment;
+import com.example.tag.gui.fragment.HostJoinFragment;
+import com.example.tag.gui.fragment.JoinFragment;
 import com.example.tag.R;
 
 public class LoginActivity extends AppCompatActivity{

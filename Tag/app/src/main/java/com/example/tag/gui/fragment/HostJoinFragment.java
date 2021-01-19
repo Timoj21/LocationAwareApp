@@ -1,4 +1,4 @@
-package com.example.tag;
+package com.example.tag.gui.fragment;
 
 import android.os.Bundle;
 
@@ -9,7 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.tag.gui.LoginActivity;
+import com.example.tag.R;
+import com.example.tag.gui.activity.LoginActivity;
 
 public class HostJoinFragment extends Fragment {
     private static final String TAG = HostJoinFragment.class.getSimpleName();

@@ -1,4 +1,4 @@
-package com.example.tag;
+package com.example.tag.gui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.tag.gui.MainActivity;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.example.tag.Data;
+import com.example.tag.R;
+import com.example.tag.Service;
+import com.example.tag.gui.activity.MainActivity;
 
 public class HostFragment extends Fragment {
     private static final String TAG = HostFragment.class.getSimpleName();
@@ -37,8 +37,6 @@ public class HostFragment extends Fragment {
             public void onClick(View v) {
                 if(playerAmountEditText.getText().length() > 0) {
                     Data.INSTANCE.setPlayer("Tikker");
-
-                    //TODO connect to server as host
 
                     //TODO if connection failed, don't start next activity
                     Intent i = new Intent(getActivity(), MainActivity.class);

@@ -1,4 +1,4 @@
-package com.example.tag;
+package com.example.tag.gui.fragment;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -9,14 +9,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.tag.gui.LoginActivity;
-import com.example.tag.gui.MainActivity;
+import com.example.tag.Data;
+import com.example.tag.R;
+import com.example.tag.gui.activity.LoginActivity;
+import com.example.tag.gui.activity.MainActivity;
 
 
 public class SettingsFragment extends Fragment {
@@ -43,8 +44,8 @@ public class SettingsFragment extends Fragment {
         this.mainActivity = (MainActivity) getActivity();
 
         this.gamePin = view.findViewById(R.id.settingsGamePin);
-        System.out.println(Data.INSTANCE.getGameId());
-        this.gamePin.setText(Data.INSTANCE.getGameId());
+
+        this.gamePin.setText("need to set game pin");
 
         this.backButton = view.findViewById(R.id.settingsBackButton);
         this.newGameButton = view.findViewById(R.id.newGameButton);

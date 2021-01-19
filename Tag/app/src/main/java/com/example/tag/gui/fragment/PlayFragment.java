@@ -1,13 +1,11 @@
-package com.example.tag;
+package com.example.tag.gui.fragment;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,18 +22,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.tag.gui.LoginActivity;
-import com.example.tag.gui.MainActivity;
+import com.example.tag.Data;
+import com.example.tag.R;
+import com.example.tag.gui.activity.MainActivity;
 
 import org.osmdroid.config.Configuration;
-import org.osmdroid.library.BuildConfig;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -184,14 +181,12 @@ public class PlayFragment extends Fragment implements LocationListener {
     }
 
     public void DrawWayPoints(){
-        System.out.println("kijk dan:  " + Data.INSTANCE.getGeoPoints().size());
         Data.INSTANCE.getGeoPoints().forEach((k, v) -> {
             Marker marker = new Marker(mapView);
             marker.setIcon(getResources().getDrawable(R.drawable.ic_baseline_not_listed_location_24));
             marker.setTitle(k);
             marker.setPosition(Data.INSTANCE.getGeoPoints().get(k));
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            System.out.println(Data.INSTANCE.getGeoPoints().get(k).getLatitude());
             mapView.getOverlays().add(marker);
         });
     }

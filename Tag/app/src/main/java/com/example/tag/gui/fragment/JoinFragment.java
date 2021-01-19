@@ -1,4 +1,4 @@
-package com.example.tag;
+package com.example.tag.gui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.tag.gui.LoginActivity;
-import com.example.tag.gui.MainActivity;
+import com.example.tag.Data;
+import com.example.tag.R;
+import com.example.tag.Service;
+import com.example.tag.gui.activity.MainActivity;
 
 public class JoinFragment extends Fragment {
     private static final String TAG = JoinFragment.class.getSimpleName();
@@ -34,12 +36,13 @@ public class JoinFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(gamePinEditText.getText().length() > 0) {
-                    //TODO connect to server as player
+                    Data.INSTANCE.setPlayer("Ontsnapper");
 
                     //TODO if connection failed, don't start next activity
                     Intent i = new Intent(getActivity(), MainActivity.class);
                     startActivity(i);
                     getActivity().finish();
+                    getActivity().startService(new Intent(getActivity(), Service.class));
                 } else{
                     Toast.makeText(getActivity(), R.string.valid_game_pin,
                             Toast.LENGTH_LONG).show();
