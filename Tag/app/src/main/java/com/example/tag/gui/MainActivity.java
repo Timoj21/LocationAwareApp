@@ -2,13 +2,18 @@ package com.example.tag.gui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.example.tag.PlayFragment;
 import com.example.tag.R;
 import com.example.tag.SettingsFragment;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private PlayFragment playFragment;
     private SettingsFragment settingsFragment;
 
+    private boolean isRequested = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

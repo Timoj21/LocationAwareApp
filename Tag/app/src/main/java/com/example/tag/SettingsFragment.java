@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.tag.gui.LoginActivity;
 import com.example.tag.gui.MainActivity;
@@ -27,6 +28,8 @@ public class SettingsFragment extends Fragment {
     private AppCompatButton yesButton;
     private AppCompatButton noButton;
 
+    private TextView gamePin;
+
     private MainActivity mainActivity;
 
     private AlertDialog.Builder dialogBuilder;
@@ -38,6 +41,10 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         this.mainActivity = (MainActivity) getActivity();
+
+        this.gamePin = view.findViewById(R.id.settingsGamePin);
+        System.out.println(Data.INSTANCE.getGameId());
+        this.gamePin.setText(Data.INSTANCE.getGameId());
 
         this.backButton = view.findViewById(R.id.settingsBackButton);
         this.newGameButton = view.findViewById(R.id.newGameButton);
@@ -86,5 +93,13 @@ public class SettingsFragment extends Fragment {
         dialogBuilder.setView(popup);
         dialog = dialogBuilder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(dialog != null){
+            dialog.dismiss();
+        }
     }
 }
