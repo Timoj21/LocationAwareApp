@@ -8,11 +8,11 @@
     <string name="host_game">Host Game</string>
     <string name="join_game">Join Game</string>
 
-    <string name="game_pin">Voer de game pin in:</string>
+    <string name="game_pin">Voer de spel code in:</string>
 
     <string name="player_amount">Hoeveel spelers wil je?</string>
 
-    <string name="valid_game_pin">Voer een geldige game pin in</string>
+    <string name="valid_game_pin">Voer een geldige spel code in</string>
     <string name="valid_player_amount">Voer een speler aantal in</string>
 
     <string name="settings">Instellingen</string>
@@ -25,4 +25,6 @@
 
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
+
+    <string name="setting_pin">Spel code:</string>
 </resources>
