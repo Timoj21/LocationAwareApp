@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -15,12 +16,16 @@ import android.view.ViewGroup;
 import com.example.tag.gui.LoginActivity;
 import com.example.tag.gui.MainActivity;
 
+import org.osmdroid.config.Configuration;
+import org.osmdroid.library.BuildConfig;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.util.ArrayList;
 
 
 public class PlayFragment extends Fragment {
@@ -79,28 +84,58 @@ public class PlayFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onStart() {
+        super.onStart();
+        this.mapView.onResume();
+        this.locationOverlay.onResume();
 
-        this.mapView = getActivity().findViewById(R.id.mapView);
-        this.mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
-        this.mapView.setMultiTouchControls(true);
-        this.mapView.setTileSource(TileSourceFactory.MAPNIK);
-
-        this.locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getActivity().getApplicationContext()), this.mapView);
-        this.locationOverlay.enableMyLocation();
-        this.locationOverlay.enableFollowLocation();
-        this.mapView.getOverlays().add(this.locationOverlay);
-        this.mapController = new MapController(this.mapView);
         this.mapController.setCenter(locationOverlay.getMyLocation());
         this.mapController.animateTo(locationOverlay.getMyLocation());
         this.mapController.zoomTo(19);
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        this.mapView.onPause();
+        this.locationOverlay.onPause();
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+//        this.mapView = getActivity().findViewById(R.id.mapView);
+//        this.mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+//        this.mapView.setMultiTouchControls(true);
+//        this.mapView.setTileSource(TileSourceFactory.MAPNIK);
+//
+//        this.locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getActivity().getApplicationContext()), this.mapView);
+//        this.locationOverlay.enableMyLocation();
+//        this.locationOverlay.enableFollowLocation();
+//        this.mapView.getOverlays().add(this.locationOverlay);
+//        this.mapController = new MapController(this.mapView);
+//        this.mapController.setCenter(locationOverlay.getMyLocation());
+//        this.mapController.animateTo(locationOverlay.getMyLocation());
+//        this.mapController.zoomTo(19);
+//
+//        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
+        for (int i = 0; i < grantResults.length; i++) {
+            permissionsToRequest.add(permissions[i]);
+        }
+        if (permissionsToRequest.size() > 0) {
+            ActivityCompat.requestPermissions(
+                    this.getActivity(),
+                    permissionsToRequest.toArray(new String[0]),
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
         //TODO if not given permission block app
     }
 }
