@@ -70,7 +70,7 @@ public class Service extends android.app.Service {
             if(Data.INSTANCE.getPlayer().equals("Tikker")) {
 
                 Data.INSTANCE.setGameId(IDgenerator.generate());
-                System.out.println("game pin is: " + IDgenerator.generate());
+
                 sendMessageToServer("MakeNewGame");
 
                 String received = dis.readUTF();

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    tools:context=".gui.SplashActivity">
+    tools:context=".gui.activity.SplashActivity">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/splashTitle"

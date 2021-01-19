@@ -20,15 +20,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
-        <activity android:name=".gui.LoginActivity"></activity>
-        <activity android:name=".gui.SplashActivity">
+        <activity android:name=".gui.activity.LoginActivity"></activity>
+        <activity android:name=".gui.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".gui.MainActivity"></activity>
+        <activity android:name=".gui.activity.MainActivity"></activity>
         <service android:name=".Service"/>
     </application>
 
