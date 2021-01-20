@@ -70,6 +70,10 @@ public class PlayFragment extends Fragment implements LocationListener {
 
     private Location currentLocation;
     private Overlay allGeoPointsOverlay;
+    private List<Overlay> overlayList;
+
+    final ArrayList<OverlayItem> overlayItems = new ArrayList<>();
+
     //private GeofenceInitalizer initializer;
 
 
@@ -167,6 +171,7 @@ public class PlayFragment extends Fragment implements LocationListener {
         this.locationOverlay.enableFollowLocation();
         this.locationOverlay.enableMyLocation();
         this.mapView.getOverlays().add(this.locationOverlay);
+        //this.overlayList = mapView.getOverlays();
 
         this.mapController = new MapController(this.mapView);
         this.mapController.setZoom(19);
@@ -208,6 +213,7 @@ public class PlayFragment extends Fragment implements LocationListener {
 
 
         }
+        
         GeoPoint geoPoint = new GeoPoint(Double.parseDouble("51.58634557563859"), Double.parseDouble("4.776964947099206"));
         Data.INSTANCE.setGeoPoint(geoPoint);
         Data.INSTANCE.getGeoPoints().add(geoPoint);
@@ -218,8 +224,6 @@ public class PlayFragment extends Fragment implements LocationListener {
     public void DrawWayPoints() {
         //initializer.removeGeoFences();
 
-
-        final ArrayList<OverlayItem> items = new ArrayList<>(Data.INSTANCE.getGeoPoints().size());
         // marker icon
 
         // add all locations to the overlay itemss
@@ -231,10 +235,15 @@ public class PlayFragment extends Fragment implements LocationListener {
         marker = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_not_listed_location_24);
         marker.setAlpha(255);
 
-        item.setMarker(marker);
-        items.add(item);
+        overlayItems.add(item);
 
-        allGeoPointsOverlay = new ItemizedIconOverlay<>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+        for (OverlayItem o : overlayItems) {
+            o.setMarker(marker);
+        }
+
+
+
+        allGeoPointsOverlay = new ItemizedIconOverlay<>(overlayItems, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
             @Override
             public boolean onItemSingleTapUp(int index, OverlayItem item) {
                 return false;
@@ -347,15 +356,14 @@ public class PlayFragment extends Fragment implements LocationListener {
 
             System.out.println(distance);
             if (distance < 0.03) {
+                overlayItems.clear();
+                mapView.getOverlays().clear();
+                this.mapView.getOverlays().add(this.locationOverlay);
                 Data.INSTANCE.setGeoPoint(makeRandomGeoPoint());
                 Data.INSTANCE.setTagCounter(Data.INSTANCE.getTagCounter() + 1);
                 Toast.makeText(mainActivity, "Reached Point, new point has been made", Toast.LENGTH_SHORT).show();
                 DrawWayPoints();
             }
-        } else {
-            GeoPoint geoPoint = new GeoPoint(4.776964947099206, 51.58634557563859);
-            Data.INSTANCE.setGeoPoint(geoPoint);
-            DrawWayPoints();
         }
 
     }
