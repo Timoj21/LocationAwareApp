@@ -27,12 +27,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tag.Data;
 import com.example.tag.R;
 import com.example.tag.Service;
 import com.example.tag.geofencing.GeofenceInitalizer;
 import com.example.tag.gui.activity.MainActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -71,6 +80,8 @@ public class PlayFragment extends Fragment implements LocationListener {
     private Location currentLocation;
     private Overlay allGeoPointsOverlay;
     private List<Overlay> overlayList;
+    private String toastInfo;
+    private RequestQueue queue;
 
     final ArrayList<OverlayItem> overlayItems = new ArrayList<>();
 
@@ -93,6 +104,8 @@ public class PlayFragment extends Fragment implements LocationListener {
                 // WRITE_EXTERNAL_STORAGE is required in order to show the map
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         });
+
+        this.queue = Volley.newRequestQueue(getContext());
     }
 
     @Nullable
@@ -246,12 +259,41 @@ public class PlayFragment extends Fragment implements LocationListener {
         allGeoPointsOverlay = new ItemizedIconOverlay<>(overlayItems, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
             @Override
             public boolean onItemSingleTapUp(int index, OverlayItem item) {
-                return false;
+                Toast.makeText(getContext(), "Loop hier naartoe", Toast.LENGTH_SHORT).show();
+                return true;
             }
 
             @Override
             public boolean onItemLongPress(int index, OverlayItem item) {
-                return false;
+                String lon = String.valueOf(item.getPoint().getLongitude());
+                String lat = String.valueOf(item.getPoint().getLatitude());
+
+                final String url =
+                        "https://us1.locationiq.com/v1/reverse.php?key=pk.2fefb5aa27dbc171c77469df356bb854&lat=" + lat + "&lon=" + lon +"&format=json";
+                System.out.println(url);
+
+                final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+                    try {
+                        toastInfo = response.getString("display_name");
+                        System.out.println(toastInfo);
+
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                        , error -> {
+
+                            }
+                );
+                queue.add(request);
+                Toast.makeText(getContext(), toastInfo, Toast.LENGTH_SHORT).show();
+                //http sturen
+                //JSONObject
+                //JSONString adres = ("formatted_address")
+                //Toast.makeText(getContext(), adres, Toast.LENGTH_SHORT).show();
+                return true;
             }
         }, requireContext());
 
