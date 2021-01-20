@@ -277,7 +277,7 @@ public class PlayFragment extends Fragment implements LocationListener {
                         toastInfo = response.getString("display_name");
                         System.out.println(toastInfo);
 
-
+                        Toast.makeText(getContext(), toastInfo, Toast.LENGTH_LONG).show();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -288,11 +288,7 @@ public class PlayFragment extends Fragment implements LocationListener {
                             }
                 );
                 queue.add(request);
-                Toast.makeText(getContext(), toastInfo, Toast.LENGTH_LONG).show();
-                //http sturen
-                //JSONObject
-                //JSONString adres = ("formatted_address")
-                //Toast.makeText(getContext(), adres, Toast.LENGTH_SHORT).show();
+
                 return true;
             }
         }, requireContext());
