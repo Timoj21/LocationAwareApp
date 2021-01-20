@@ -288,7 +288,7 @@ public class PlayFragment extends Fragment implements LocationListener {
                             }
                 );
                 queue.add(request);
-                Toast.makeText(getContext(), toastInfo, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), toastInfo, Toast.LENGTH_LONG).show();
                 //http sturen
                 //JSONObject
                 //JSONString adres = ("formatted_address")
