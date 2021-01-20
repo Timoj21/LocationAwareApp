@@ -269,7 +269,7 @@ public class PlayFragment extends Fragment implements LocationListener {
                 String lat = String.valueOf(item.getPoint().getLatitude());
 
                 final String url =
-                        "https://us1.locationiq.com/v1/reverse.php?key=pk.2fefb5aa27dbc171c77469df356bb854&lat=" + lat + "&lon=" + lon +"&format=json";
+                        "https://eu1.locationiq.com/v1/reverse.php?key=pk.2fefb5aa27dbc171c77469df356bb854&lat=" + lat + "&lon=" + lon +"&format=json";
                 System.out.println(url);
 
                 final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
