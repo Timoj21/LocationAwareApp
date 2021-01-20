@@ -12,6 +12,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Random;
 
 import static android.content.ContentValues.TAG;
 
@@ -29,7 +30,6 @@ public class Service extends android.app.Service {
     private Thread thread;
 
 
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -39,8 +39,8 @@ public class Service extends android.app.Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Runnable runnable = new Runnable(){
-            public void run(){
+        Runnable runnable = new Runnable() {
+            public void run() {
                 connectToServer();
             }
         };
@@ -56,7 +56,7 @@ public class Service extends android.app.Service {
         super.onDestroy();
     }
 
-    public void connectToServer(){
+    public void connectToServer() {
         try {
             Thread.sleep(2000);
 
@@ -70,7 +70,7 @@ public class Service extends android.app.Service {
             this.serverDis = new DataInputStream(serverSocket.getInputStream());
             this.serverDos = new DataOutputStream(serverSocket.getOutputStream());
 
-            if(Data.INSTANCE.getPlayer().equals("Tikker")) {
+            if (Data.INSTANCE.getPlayer().equals("Tikker")) {
 
                 Data.INSTANCE.setPlayerId(IDgenerator.generate());
 
@@ -115,70 +115,86 @@ public class Service extends android.app.Service {
         }
     }
 
-    public void join(String typeOfPlayer, String id){
+    public void join(String typeOfPlayer, String id) {
         try {
-            Thread.sleep(1000);
             while (true) {
-                System.out.println(Data.INSTANCE.getPlayer());
                 sendMessageToGame("LastLocation" + ":" + typeOfPlayer + ":" + id + ":"
                         + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
 
                 System.out.println("DIT IS MIJN HUIDIGE LOCATIE" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
+
+                if (Data.INSTANCE.isTargetReached()) {
+                    GeoPoint geoPoint = new GeoPoint(makeRandomGeoPoint());
+
+                    sendMessageToGame("NewGeoPoint" + ":" + typeOfPlayer + ":" + id + ":"
+                            + geoPoint.getLongitude() + "," + geoPoint.getLatitude());
+
+                    try {
+                        String S = this.gameDis.readUTF();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
 
                 try {
                     String received = this.gameDis.readUTF();
 
                     switch (received) {
                         case "SENDING LOCATION":
-                            String amountOfOntsnappers = this.gameDis.readUTF();
-                            int amount = Integer.parseInt(amountOfOntsnappers);
-                            for (int i = 0; i < amount; i++) {
-                                String ontsnapperLocationReceived = this.gameDis.readUTF();
-                                String[] ontsnapperLocationArray = ontsnapperLocationReceived.split("~");
-                                String ontsnapperLocation = ontsnapperLocationArray[0];
-                                String ontsnapperID = ontsnapperLocationArray[1];
-                                String[] ontsnapperCoor = ontsnapperLocation.split(",");
-                                String ontsnapperLon = ontsnapperCoor[0];
-                                String ontsnapperLat = ontsnapperCoor[1];
-                                GeoPoint geoPoint = new GeoPoint(Double.parseDouble(ontsnapperLat), Double.parseDouble(ontsnapperLon));
-                                if (Data.INSTANCE.getGeoPoints().containsKey(ontsnapperID)) {
-                                    Data.INSTANCE.getGeoPoints().replace(ontsnapperID, Data.INSTANCE.getGeoPoints().get(ontsnapperID), geoPoint);
-                                } else {
-                                    Data.INSTANCE.getGeoPoints().put(ontsnapperID, geoPoint);
-                                }
-                                System.out.println(Data.INSTANCE.getGeoPoints().size());
+                            String ontsnapperLocationReceived = this.gameDis.readUTF();
+                            String[] ontsnapperLocationArray = ontsnapperLocationReceived.split("~");
+                            String ontsnapperLocation = ontsnapperLocationArray[0];
+                            String ontsnapperID = ontsnapperLocationArray[1];
+                            String[] ontsnapperCoor = ontsnapperLocation.split(",");
+                            String ontsnapperLon = ontsnapperCoor[0];
+                            String ontsnapperLat = ontsnapperCoor[1];
+                            GeoPoint geoPoint = new GeoPoint(Double.parseDouble(ontsnapperLat), Double.parseDouble(ontsnapperLon));
+                            if (Data.INSTANCE.getGeoPoints().containsKey(ontsnapperID)) {
+                                Data.INSTANCE.getGeoPoints().replace(ontsnapperID, Data.INSTANCE.getGeoPoints().get(ontsnapperID), geoPoint);
+                            } else {
+                                Data.INSTANCE.getGeoPoints().put(ontsnapperID, geoPoint);
                             }
+                            System.out.println(Data.INSTANCE.getGeoPoints().size());
+
                             break;
 
                         case "SENDING DISTANCE":
-                            String amountOfOntsnappersForDistance = this.gameDis.readUTF();
-                            int amountForDistance = Integer.parseInt(amountOfOntsnappersForDistance);
-                            if (typeOfPlayer.equals("Tikker")) {
-                                for (int i = 0; i < amountForDistance; i++) {
-                                    //show distances
-                                    String distanceBetweenID = this.gameDis.readUTF();
-                                    double distance = Double.parseDouble(distanceBetweenID);
-                                    String popupMessage = "Distance between you and a player is: " + distance + " km";
-                                    Log.e(TAG, popupMessage);
-                                    //DistancePopup popup = new DistancePopup();
-                                    //popup.setText(popupMessage);
+
+                            //show distances
+                            String distanceBetweenID = this.gameDis.readUTF();
+                            Log.e(TAG, "join: JAJA: " + distanceBetweenID);
+                            String[] distanceArray = distanceBetweenID.split(":");
+                            String distanceID = distanceArray[0];
+                            double distance = Double.parseDouble(distanceArray[1]);
+                            String popupMessage = "Distance between you and " + distanceID + " is: " + distance + " km";
+                            if (Data.INSTANCE.getDistances().containsKey(distanceID)) {
+                                if (Data.INSTANCE.getDistances().get(distanceID) != distance) {
+                                    Data.INSTANCE.getDistances().replace(distanceID, Data.INSTANCE.getDistances().get(distanceID), distance);
+                                    Data.INSTANCE.setTargetReached(false);
                                 }
+                            } else {
+                                Data.INSTANCE.getDistances().put(distanceID, distance);
+                            }
+
+                            Log.e(TAG, popupMessage);
+                            //DistancePopup popup = new DistancePopup();
+                            //popup.setText(popupMessage);
+
 
 
                                 /*
                                 als 3 min voorbij zijn, maak geopoint van locaties van ontsnappers en laat die op de map zien
                                 */
-
-                            }
                             break;
-                        default :
+                        default:
                             System.out.println("komt niet in de switch");
                             break;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 }
 
 
@@ -200,5 +216,20 @@ public class Service extends android.app.Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public GeoPoint makeRandomGeoPoint() {
+        Random random = new Random();
+        double lowLat = 51.57835075376575;
+        double highLat = 51.594681317352745;
+
+        double lowLon = 4.764797137382507;
+        double highLon = 4.787660921269813;
+
+        double randomLat = ((highLat - lowLat) * random.nextDouble()) + lowLat;
+        double randomLon = ((highLon - lowLon) * random.nextDouble()) + lowLon;
+
+        GeoPoint geoPoint = new GeoPoint(randomLat, randomLon);
+        return geoPoint;
     }
 }

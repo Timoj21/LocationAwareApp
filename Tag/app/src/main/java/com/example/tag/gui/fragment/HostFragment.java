@@ -43,7 +43,7 @@ public class HostFragment extends Fragment {
                     Intent i = new Intent(getActivity(), MainActivity.class);
                     startActivity(i);
                     getActivity().finish();
-                    getActivity().startService(new Intent(getActivity(), Service.class));
+                    //getActivity().startService(new Intent(getActivity(), Service.class));
                 } else {
                     Toast.makeText(getActivity(), R.string.valid_player_amount,
                             Toast.LENGTH_LONG).show();

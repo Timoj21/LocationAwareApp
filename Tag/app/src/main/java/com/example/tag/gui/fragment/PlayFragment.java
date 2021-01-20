@@ -2,6 +2,7 @@ package com.example.tag.gui.fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -23,9 +24,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tag.Data;
 import com.example.tag.R;
+import com.example.tag.Service;
 import com.example.tag.geofencing.GeofenceInitalizer;
 import com.example.tag.gui.activity.MainActivity;
 
@@ -44,6 +48,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class PlayFragment extends Fragment implements LocationListener {
@@ -58,12 +63,14 @@ public class PlayFragment extends Fragment implements LocationListener {
 
     private MapView mapView;
 
+    private TextView tagCounterTextView;
+
     private MyLocationNewOverlay locationOverlay;
     private MapController mapController;
 
     private Location currentLocation;
     private Overlay allGeoPointsOverlay;
-    private GeofenceInitalizer initializer;
+    //private GeofenceInitalizer initializer;
 
 
     @Override
@@ -90,6 +97,10 @@ public class PlayFragment extends Fragment implements LocationListener {
         View view = inflater.inflate(R.layout.fragment_play, container, false);
 
         this.mainActivity = (MainActivity) getContext();
+
+        this.tagCounterTextView = view.findViewById(R.id.tagCounterTextView);
+        this.tagCounterTextView.setText(String.valueOf(Data.INSTANCE.getTagCounter()));
+
 
         this.settingsButton = view.findViewById(R.id.settingsButton);
         this.centerButton = view.findViewById(R.id.centerButton);
@@ -129,8 +140,14 @@ public class PlayFragment extends Fragment implements LocationListener {
         super.onStop();
         this.mapView.onPause();
         this.locationOverlay.onPause();
+        //getActivity().stopService(new Intent(getActivity(), Service.class));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //getActivity().startService(new Intent(getActivity(), Service.class));
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -138,7 +155,7 @@ public class PlayFragment extends Fragment implements LocationListener {
 
         Configuration.getInstance().setUserAgentValue("com.example.tag");
 
-        initializer = new GeofenceInitalizer(requireContext(), requireActivity());
+        //initializer = new GeofenceInitalizer(requireContext(), requireActivity());
         this.mapView = view.findViewById(R.id.mapView);
         this.mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         this.mapView.setMultiTouchControls(true);
@@ -153,6 +170,8 @@ public class PlayFragment extends Fragment implements LocationListener {
 
         this.mapController = new MapController(this.mapView);
         this.mapController.setZoom(19);
+
+
 
         Location location = new Location (String.valueOf(gpsMyLocationProvider));
         Data.INSTANCE.setLocation(location);
@@ -188,11 +207,14 @@ public class PlayFragment extends Fragment implements LocationListener {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             });
 
+
         }
+
+        DrawWayPoints();
     }
 
     public void DrawWayPoints(){
-        initializer.removeGeoFences();
+        //initializer.removeGeoFences();
 
 
         final ArrayList<OverlayItem> items = new ArrayList<>(Data.INSTANCE.getGeoPoints().size());
@@ -223,15 +245,15 @@ public class PlayFragment extends Fragment implements LocationListener {
                 }, requireContext());
 
                 mapView.getOverlays().add(allGeoPointsOverlay);
-                List<GeoPoint> list = new ArrayList<>(Data.INSTANCE.getGeoPoints().values());
-                List<com.example.tag.Location> locations = new ArrayList<>();
-                for (GeoPoint g : list ){
-                    double lat = g.getLatitude();
-                    double lon = g.getLongitude();
-                    com.example.tag.Location location = new com.example.tag.Location(lat, lon);
-                    locations.add(location);
-                }
-                addGeofences(locations);
+//                List<GeoPoint> list = new ArrayList<>(Data.INSTANCE.getGeoPoints().values());
+//                List<com.example.tag.Location> locations = new ArrayList<>();
+//                for (GeoPoint g : list ){
+//                    double lat = g.getLatitude();
+//                    double lon = g.getLongitude();
+//                    com.example.tag.Location location = new com.example.tag.Location(lat, lon);
+//                    locations.add(location);
+//                }
+//                addGeofences(locations);
             });
 
 
@@ -246,10 +268,10 @@ public class PlayFragment extends Fragment implements LocationListener {
 //        });
     }
 
-    private void addGeofences(List<com.example.tag.Location> locations) {
-        Log.d(TAG, "addGeofences: adding geofences!");
-        initializer.init(locations);
-    }
+//    private void addGeofences(List<com.example.tag.Location> locations) {
+//        Log.d(TAG, "addGeofences: adding geofences!");
+//        initializer.init(locations);
+//    }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
         ArrayList<String> permissionsToRequest = new ArrayList<>();
@@ -272,6 +294,81 @@ public class PlayFragment extends Fragment implements LocationListener {
     @Override
     public void onLocationChanged(@NonNull Location location) {
         Data.INSTANCE.setLocation(location);
-        DrawWayPoints();
+        if(isAdded()) {
+            checkTarget(location);
+        }
+
     }
+
+    public void checkTarget(Location l){
+//        Data.INSTANCE.getDistances().forEach((k, v) -> {
+//            if(v < 0.005 && !Data.INSTANCE.isTargetReached()){
+//                Toast.makeText(mainActivity, "you reached something", Toast.LENGTH_LONG).show();
+//                //Data.INSTANCE.getGeoPoints().replace(k, makeRandomGeoPoint());
+//                Data.INSTANCE.setTagCounter(Data.INSTANCE.getTagCounter() + 1);
+//                this.tagCounterTextView.setText(String.valueOf(Data.INSTANCE.getTagCounter()));
+//                Data.INSTANCE.setTargetReached(true);
+//                DrawWayPoints();
+//            }
+//        });
+        if(Data.INSTANCE.getGeoPoint() != null) {
+            double lon1 = l.getLongitude();
+            double lat1 = l.getLatitude();
+
+
+            double lon2 = Data.INSTANCE.getGeoPoint().getLongitude();
+            double lat2 = Data.INSTANCE.getGeoPoint().getLatitude();
+
+
+            lat1 = Math.toRadians(lat1);
+            lat2 = Math.toRadians(lat2);
+            lon1 = Math.toRadians(lon1);
+            lon2 = Math.toRadians(lon2);
+
+            double dlon = lon2 - lon1;
+            double dlat = lat2 - lat1;
+            double a = Math.pow(Math.sin(dlat / 2), 2)
+                    + Math.cos(lat1) * Math.cos(lat2)
+                    * Math.pow(Math.sin(dlon / 2), 2);
+
+            double c = 2 * Math.asin(Math.sqrt(a));
+
+            double distance;
+            // Radius of earth in kilometers. Use 3956
+            // for miles
+
+            //double r = 3956;
+            //distance = c * r;
+
+
+            double r = 6371;
+            distance = c * r;
+
+            if (distance < 0.005) {
+                Data.INSTANCE.setGeoPoint(makeRandomGeoPoint());
+                DrawWayPoints();
+            }
+        } else {
+            GeoPoint geoPoint = new GeoPoint(4.776964947099206,51.58634557563859);
+            Data.INSTANCE.setGeoPoint(geoPoint);
+            DrawWayPoints();
+        }
+
+    }
+
+    public GeoPoint makeRandomGeoPoint() {
+        Random random = new Random();
+        double lowLat = 51.57835075376575;
+        double highLat = 51.594681317352745;
+
+        double lowLon = 4.764797137382507;
+        double highLon = 4.787660921269813;
+
+        double randomLat = ((highLat - lowLat) * random.nextDouble()) + lowLat;
+        double randomLon = ((highLon - lowLon) * random.nextDouble()) + lowLon;
+
+        GeoPoint geoPoint = new GeoPoint(randomLat, randomLon);
+        return geoPoint;
+    }
+
 }

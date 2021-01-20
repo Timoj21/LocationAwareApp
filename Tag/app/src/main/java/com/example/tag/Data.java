@@ -22,6 +22,13 @@ public enum Data {
     private android.location.Location location;
     private GeoPoint geoPoint;
     private HashMap<String, GeoPoint> geoPoints = new HashMap();
+    private HashMap<String, Double> distances = new HashMap<>();
+
+    private Double distance;
+
+
+    private int tagCounter = 0;
+    private boolean targetReached = false;
 
     private String player;
     private String playerId;
@@ -74,6 +81,38 @@ public enum Data {
 
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+    public HashMap<String, Double> getDistances() {
+        return distances;
+    }
+
+    public void setDistances(HashMap<String, Double> distances) {
+        this.distances = distances;
+    }
+
+    public int getTagCounter() {
+        return tagCounter;
+    }
+
+    public void setTagCounter(int tagCounter) {
+        this.tagCounter = tagCounter;
+    }
+
+    public boolean isTargetReached() {
+        return targetReached;
+    }
+
+    public void setTargetReached(boolean targetReached) {
+        this.targetReached = targetReached;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 
 
