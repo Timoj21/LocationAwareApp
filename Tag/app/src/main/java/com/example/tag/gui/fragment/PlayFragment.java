@@ -213,7 +213,7 @@ public class PlayFragment extends Fragment implements LocationListener {
 
 
         }
-        
+
         GeoPoint geoPoint = new GeoPoint(Double.parseDouble("51.58634557563859"), Double.parseDouble("4.776964947099206"));
         Data.INSTANCE.setGeoPoint(geoPoint);
         Data.INSTANCE.getGeoPoints().add(geoPoint);
@@ -361,6 +361,7 @@ public class PlayFragment extends Fragment implements LocationListener {
                 this.mapView.getOverlays().add(this.locationOverlay);
                 Data.INSTANCE.setGeoPoint(makeRandomGeoPoint());
                 Data.INSTANCE.setTagCounter(Data.INSTANCE.getTagCounter() + 1);
+                this.tagCounterTextView.setText(String.valueOf(Data.INSTANCE.getTagCounter()));
                 Toast.makeText(mainActivity, "Reached Point, new point has been made", Toast.LENGTH_SHORT).show();
                 DrawWayPoints();
             }
