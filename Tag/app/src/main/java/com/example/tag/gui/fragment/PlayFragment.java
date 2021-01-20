@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 
 import com.example.tag.Data;
 import com.example.tag.R;
+import com.example.tag.geofencing.GeofenceInitalizer;
 import com.example.tag.gui.activity.MainActivity;
 
 import org.osmdroid.config.Configuration;
@@ -42,6 +43,7 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PlayFragment extends Fragment implements LocationListener {
@@ -61,6 +63,7 @@ public class PlayFragment extends Fragment implements LocationListener {
 
     private Location currentLocation;
     private Overlay allGeoPointsOverlay;
+    private GeofenceInitalizer initializer;
 
 
     @Override
@@ -71,7 +74,7 @@ public class PlayFragment extends Fragment implements LocationListener {
         StrictMode.setThreadPolicy(policy);
 
         Context ctx = getContext();
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        //Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
         requestPermissionsIfNecessary(new String[] {
                 // if you need to show the current location request FINE_LOCATION permission
@@ -135,6 +138,7 @@ public class PlayFragment extends Fragment implements LocationListener {
 
         Configuration.getInstance().setUserAgentValue("com.example.tag");
 
+        initializer = new GeofenceInitalizer(requireContext(), requireActivity());
         this.mapView = view.findViewById(R.id.mapView);
         this.mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         this.mapView.setMultiTouchControls(true);
@@ -188,6 +192,9 @@ public class PlayFragment extends Fragment implements LocationListener {
     }
 
     public void DrawWayPoints(){
+        initializer.removeGeoFences();
+
+
         final ArrayList<OverlayItem> items = new ArrayList<>(Data.INSTANCE.getGeoPoints().size());
         // marker icon
 
@@ -216,8 +223,16 @@ public class PlayFragment extends Fragment implements LocationListener {
                 }, requireContext());
 
                 mapView.getOverlays().add(allGeoPointsOverlay);
+                List<GeoPoint> list = new ArrayList<>(Data.INSTANCE.getGeoPoints().values());
+                List<com.example.tag.Location> locations = new ArrayList<>();
+                for (GeoPoint g : list ){
+                    double lat = g.getLatitude();
+                    double lon = g.getLongitude();
+                    com.example.tag.Location location = new com.example.tag.Location(lat, lon);
+                    locations.add(location);
+                }
+                addGeofences(locations);
             });
-
 
 
 //
@@ -229,6 +244,11 @@ public class PlayFragment extends Fragment implements LocationListener {
 //            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 //            mapView.getOverlays().add(marker);
 //        });
+    }
+
+    private void addGeofences(List<com.example.tag.Location> locations) {
+        Log.d(TAG, "addGeofences: adding geofences!");
+        initializer.init(locations);
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
