@@ -1,15 +1,11 @@
 package com.example.tag;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
-import android.util.Log;
 
 import org.osmdroid.util.GeoPoint;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -28,6 +24,7 @@ public enum Data {
     private HashMap<String, GeoPoint> geoPoints = new HashMap();
 
     private String player;
+    private String playerId;
     private String gameId;
 
     public void setContext(Context context) {
@@ -61,6 +58,14 @@ public enum Data {
 
     public void setPlayer(String player) {
         this.player = player;
+    }
+
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
     }
 
     public String getGameId() {

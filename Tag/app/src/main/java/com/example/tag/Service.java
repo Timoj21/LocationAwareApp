@@ -72,7 +72,7 @@ public class Service extends android.app.Service {
 
             if(Data.INSTANCE.getPlayer().equals("Tikker")) {
 
-                Data.INSTANCE.setGameId(IDgenerator.generate());
+                Data.INSTANCE.setPlayerId(IDgenerator.generate());
 
                 sendMessageToServer("MakeNewGame");
 
@@ -80,6 +80,7 @@ public class Service extends android.app.Service {
                 String received = serverDis.readUTF();
                 int receivedGameSocket = Integer.parseInt(received);
                 this.gameSocket = new Socket(ip, receivedGameSocket);
+                System.out.println("game socket van ontsnapper is" + receivedGameSocket);
 
                 this.gameDis = new DataInputStream(gameSocket.getInputStream());
                 this.gameDos = new DataOutputStream(gameSocket.getOutputStream());
@@ -89,23 +90,24 @@ public class Service extends android.app.Service {
 
                 Thread.sleep(2000);
 
-                sendMessageToGame("Tikker" + ":" + Data.INSTANCE.getGameId() + ":" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
-                join("Tikker", Data.INSTANCE.getGameId());
+                sendMessageToGame("Tikker" + ":" + Data.INSTANCE.getPlayerId() + ":" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
+                join("Tikker", Data.INSTANCE.getPlayerId());
             } else {
-                serverDos.writeUTF("JoinGame" + Data.INSTANCE.getGameId());
+                Data.INSTANCE.setPlayerId(IDgenerator.generate());
+                sendMessageToServer("JoinGame" + Data.INSTANCE.getGameId());
 
                 String receivedPortNumber = serverDis.readUTF();
                 if (!receivedPortNumber.equals("No Valid Port")) {
                     int receivedGameSocket = Integer.parseInt(receivedPortNumber);
                     this.gameSocket = new Socket(ip, receivedGameSocket);
-
+                    System.out.println("game socket van ontsnapper is" + receivedGameSocket);
                     this.gameDis = new DataInputStream(gameSocket.getInputStream());
                     this.gameDos = new DataOutputStream(gameSocket.getOutputStream());
 
                     Thread.sleep(2000);
 
-                    sendMessageToGame("Ontsnapper" + ":" + Data.INSTANCE.getGameId() + ":" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
-                    join("Ontsnapper", Data.INSTANCE.getGameId());
+                    sendMessageToGame("Ontsnapper" + ":" + Data.INSTANCE.getPlayerId() + ":" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
+                    join("Ontsnapper", Data.INSTANCE.getPlayerId());
                 }
             }
         } catch (Exception e) {
@@ -117,6 +119,7 @@ public class Service extends android.app.Service {
         try {
             Thread.sleep(1000);
             while (true) {
+                System.out.println(Data.INSTANCE.getPlayer());
                 sendMessageToGame("LastLocation" + ":" + typeOfPlayer + ":" + id + ":"
                         + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
 
@@ -167,7 +170,10 @@ public class Service extends android.app.Service {
                                 */
 
                             }
-
+                            break;
+                        default :
+                            System.out.println("komt niet in de switch");
+                            break;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -177,7 +183,7 @@ public class Service extends android.app.Service {
 
 
             }
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -186,7 +192,13 @@ public class Service extends android.app.Service {
         serverDos.writeUTF(message);
     }
 
-    public void sendMessageToGame(String message) throws IOException {
-        gameDos.writeUTF(message);
+    public void sendMessageToGame(String message) {
+        System.out.println(Data.INSTANCE.getPlayer() + " sends message: " + message);
+
+        try {
+            gameDos.writeUTF(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

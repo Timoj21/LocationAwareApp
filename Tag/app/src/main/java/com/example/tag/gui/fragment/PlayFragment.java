@@ -3,9 +3,11 @@ package com.example.tag.gui.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,7 +34,10 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -55,6 +60,8 @@ public class PlayFragment extends Fragment implements LocationListener {
     private MapController mapController;
 
     private Location currentLocation;
+    private Overlay allGeoPointsOverlay;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -181,14 +188,47 @@ public class PlayFragment extends Fragment implements LocationListener {
     }
 
     public void DrawWayPoints(){
-        Data.INSTANCE.getGeoPoints().forEach((k, v) -> {
-            Marker marker = new Marker(mapView);
-            marker.setIcon(getResources().getDrawable(R.drawable.ic_baseline_not_listed_location_24));
-            marker.setTitle(k);
-            marker.setPosition(Data.INSTANCE.getGeoPoints().get(k));
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            mapView.getOverlays().add(marker);
-        });
+        final ArrayList<OverlayItem> items = new ArrayList<>(Data.INSTANCE.getGeoPoints().size());
+        // marker icon
+
+        // add all locations to the overlay itemss
+            Data.INSTANCE.getGeoPoints().forEach((k, v) -> {
+                OverlayItem item = new OverlayItem(v.toDoubleString(), v.toIntString(), v);
+                Drawable marker = null;
+
+                Log.d(TAG, "addLocations: geopoint " + v);
+                marker = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_not_listed_location_24);
+                marker.setAlpha(255);
+
+                item.setMarker(marker);
+                items.add(item);
+
+                allGeoPointsOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                    @Override
+                    public boolean onItemSingleTapUp(int index, OverlayItem item) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onItemLongPress(int index, OverlayItem item) {
+                        return false;
+                    }
+                }, requireContext());
+
+                mapView.getOverlays().add(allGeoPointsOverlay);
+            });
+
+
+
+//
+//        Data.INSTANCE.getGeoPoints().forEach((k, v) -> {
+//            Marker marker = new Marker(mapView);
+//            marker.setIcon(getResources().getDrawable(R.drawable.ic_baseline_not_listed_location_24));
+//            marker.setTitle(k);
+//            marker.setPosition(Data.INSTANCE.getGeoPoints().get(k));
+//            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+//            mapView.getOverlays().add(marker);
+//        });
     }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
