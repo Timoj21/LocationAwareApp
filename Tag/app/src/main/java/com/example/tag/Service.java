@@ -5,8 +5,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.osmdroid.util.GeoPoint;
 
@@ -19,9 +17,14 @@ import static android.content.ContentValues.TAG;
 
 public class Service extends android.app.Service {
 
-    private Socket socket;
-    private DataInputStream dis;
-    private DataOutputStream dos;
+    private Socket serverSocket;
+    private DataInputStream serverDis;
+    private DataOutputStream serverDos;
+
+    private Socket gameSocket;
+    private DataInputStream gameDis;
+    private DataOutputStream gameDos;
+
 
     private Thread thread;
 
@@ -61,11 +64,11 @@ public class Service extends android.app.Service {
             String ip = "192.168.178.33";
 
             // establish the connection with server port 5056
-            Socket s = new Socket(ip, 5056);
+            this.serverSocket = new Socket(ip, 5056);
 
             // obtaining input and out streams
-            this.dis = new DataInputStream(s.getInputStream());
-            this.dos = new DataOutputStream(s.getOutputStream());
+            this.serverDis = new DataInputStream(serverSocket.getInputStream());
+            this.serverDos = new DataOutputStream(serverSocket.getOutputStream());
 
             if(Data.INSTANCE.getPlayer().equals("Tikker")) {
 
@@ -73,33 +76,38 @@ public class Service extends android.app.Service {
 
                 sendMessageToServer("MakeNewGame");
 
-                String received = dis.readUTF();
-
+                //Game port
+                String received = serverDis.readUTF();
                 int receivedGameSocket = Integer.parseInt(received);
-                String gameCode = dis.readUTF();
+                this.gameSocket = new Socket(ip, receivedGameSocket);
 
-                Socket gameSocket = new Socket(ip, receivedGameSocket);
+                this.gameDis = new DataInputStream(gameSocket.getInputStream());
+                this.gameDos = new DataOutputStream(gameSocket.getOutputStream());
+
+                //Game pin
+                String gameCode = serverDis.readUTF();
 
                 Thread.sleep(2000);
 
-                sendMessageToServer("Tikker" + ":" + Data.INSTANCE.getGameId() + ":" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
+                sendMessageToGame("Tikker" + ":" + Data.INSTANCE.getGameId() + ":" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
                 join("Tikker", Data.INSTANCE.getGameId());
             } else {
-                dos.writeUTF("JoinGame" + Data.INSTANCE.getGameId());
+                serverDos.writeUTF("JoinGame" + Data.INSTANCE.getGameId());
 
-                String receivedPortNumber = dis.readUTF();
+                String receivedPortNumber = serverDis.readUTF();
                 if (!receivedPortNumber.equals("No Valid Port")) {
-                    int gamePort = Integer.parseInt(receivedPortNumber);
-                    Socket gameSocket = new Socket(ip, gamePort);
+                    int receivedGameSocket = Integer.parseInt(receivedPortNumber);
+                    this.gameSocket = new Socket(ip, receivedGameSocket);
+
+                    this.gameDis = new DataInputStream(gameSocket.getInputStream());
+                    this.gameDos = new DataOutputStream(gameSocket.getOutputStream());
 
                     Thread.sleep(2000);
 
-                    sendMessageToServer("Ontsnapper" + ":" + Data.INSTANCE.getGameId() + ":" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
+                    sendMessageToGame("Ontsnapper" + ":" + Data.INSTANCE.getGameId() + ":" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
                     join("Ontsnapper", Data.INSTANCE.getGameId());
                 }
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,20 +117,20 @@ public class Service extends android.app.Service {
         try {
             Thread.sleep(1000);
             while (true) {
-                sendMessageToServer("LastLocation" + ":" + typeOfPlayer + ":" + id + ":"
+                sendMessageToGame("LastLocation" + ":" + typeOfPlayer + ":" + id + ":"
                         + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
 
                 System.out.println("DIT IS MIJN HUIDIGE LOCATIE" + Data.INSTANCE.getLocation().getLongitude() + "," + Data.INSTANCE.getLocation().getLatitude());
 
                 try {
-                    String received = this.dis.readUTF();
+                    String received = this.gameDis.readUTF();
 
                     switch (received) {
                         case "SENDING LOCATION":
-                            String amountOfOntsnappers = this.dis.readUTF();
+                            String amountOfOntsnappers = this.gameDis.readUTF();
                             int amount = Integer.parseInt(amountOfOntsnappers);
                             for (int i = 0; i < amount; i++) {
-                                String ontsnapperLocationReceived = this.dis.readUTF();
+                                String ontsnapperLocationReceived = this.gameDis.readUTF();
                                 String[] ontsnapperLocationArray = ontsnapperLocationReceived.split("~");
                                 String ontsnapperLocation = ontsnapperLocationArray[0];
                                 String ontsnapperID = ontsnapperLocationArray[1];
@@ -135,16 +143,17 @@ public class Service extends android.app.Service {
                                 } else {
                                     Data.INSTANCE.getGeoPoints().put(ontsnapperID, geoPoint);
                                 }
+                                System.out.println(Data.INSTANCE.getGeoPoints().size());
                             }
                             break;
 
                         case "SENDING DISTANCE":
-                            String amountOfOntsnappersForDistance = this.dis.readUTF();
+                            String amountOfOntsnappersForDistance = this.gameDis.readUTF();
                             int amountForDistance = Integer.parseInt(amountOfOntsnappersForDistance);
                             if (typeOfPlayer.equals("Tikker")) {
                                 for (int i = 0; i < amountForDistance; i++) {
                                     //show distances
-                                    String distanceBetweenID = this.dis.readUTF();
+                                    String distanceBetweenID = this.gameDis.readUTF();
                                     double distance = Double.parseDouble(distanceBetweenID);
                                     String popupMessage = "Distance between you and a player is: " + distance + " km";
                                     Log.e(TAG, popupMessage);
@@ -174,6 +183,10 @@ public class Service extends android.app.Service {
     }
 
     public void sendMessageToServer(String message) throws IOException {
-        dos.writeUTF(message);
+        serverDos.writeUTF(message);
+    }
+
+    public void sendMessageToGame(String message) throws IOException {
+        gameDos.writeUTF(message);
     }
 }

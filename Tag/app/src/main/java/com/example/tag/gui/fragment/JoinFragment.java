@@ -37,6 +37,7 @@ public class JoinFragment extends Fragment {
             public void onClick(View v) {
                 if(gamePinEditText.getText().length() > 0) {
                     Data.INSTANCE.setPlayer("Ontsnapper");
+                    Data.INSTANCE.setGameId("123456");
 
                     //TODO if connection failed, don't start next activity
                     Intent i = new Intent(getActivity(), MainActivity.class);

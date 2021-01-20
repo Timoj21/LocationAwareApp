@@ -37,6 +37,7 @@ public class HostFragment extends Fragment {
             public void onClick(View v) {
                 if(playerAmountEditText.getText().length() > 0) {
                     Data.INSTANCE.setPlayer("Tikker");
+                    Data.INSTANCE.setGameId("123456");
 
                     //TODO if connection failed, don't start next activity
                     Intent i = new Intent(getActivity(), MainActivity.class);
