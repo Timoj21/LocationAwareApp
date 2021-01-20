@@ -83,7 +83,7 @@ public class PlayFragment extends Fragment implements LocationListener {
         Context ctx = getContext();
         //Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        requestPermissionsIfNecessary(new String[] {
+        requestPermissionsIfNecessary(new String[]{
                 // if you need to show the current location request FINE_LOCATION permission
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 // WRITE_EXTERNAL_STORAGE is required in order to show the map
@@ -172,8 +172,7 @@ public class PlayFragment extends Fragment implements LocationListener {
         this.mapController.setZoom(19);
 
 
-
-        Location location = new Location (String.valueOf(gpsMyLocationProvider));
+        Location location = new Location(String.valueOf(gpsMyLocationProvider));
         Data.INSTANCE.setLocation(location);
 
         // add location manager and set the start point
@@ -200,7 +199,7 @@ public class PlayFragment extends Fragment implements LocationListener {
         } catch (SecurityException e) {
             Log.d(TAG, "onViewCreated: exception while getting location: " + e.getLocalizedMessage());
 
-            requestPermissionsIfNecessary(new String[] {
+            requestPermissionsIfNecessary(new String[]{
                     // if you need to show the current location request FINE_LOCATION permission
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     // WRITE_EXTERNAL_STORAGE is required in order to show the map
@@ -209,11 +208,14 @@ public class PlayFragment extends Fragment implements LocationListener {
 
 
         }
+        GeoPoint geoPoint = new GeoPoint(Double.parseDouble("51.58634557563859"), Double.parseDouble("4.776964947099206"));
+        Data.INSTANCE.setGeoPoint(geoPoint);
+        Data.INSTANCE.getGeoPoints().add(geoPoint);
 
         DrawWayPoints();
     }
 
-    public void DrawWayPoints(){
+    public void DrawWayPoints() {
         //initializer.removeGeoFences();
 
 
@@ -221,30 +223,30 @@ public class PlayFragment extends Fragment implements LocationListener {
         // marker icon
 
         // add all locations to the overlay itemss
-            Data.INSTANCE.getGeoPoints().forEach((k, v) -> {
-                OverlayItem item = new OverlayItem(v.toDoubleString(), v.toIntString(), v);
-                Drawable marker = null;
 
-                Log.d(TAG, "addLocations: geopoint " + v);
-                marker = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_not_listed_location_24);
-                marker.setAlpha(255);
+        OverlayItem item = new OverlayItem(Data.INSTANCE.getGeoPoint().toDoubleString(), Data.INSTANCE.getGeoPoint().toIntString(), Data.INSTANCE.getGeoPoint());
+        Drawable marker = null;
 
-                item.setMarker(marker);
-                items.add(item);
+        Log.d(TAG, "addLocations: geopoint " + Data.INSTANCE.getGeoPoint());
+        marker = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_not_listed_location_24);
+        marker.setAlpha(255);
 
-                allGeoPointsOverlay = new ItemizedIconOverlay<OverlayItem>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                    @Override
-                    public boolean onItemSingleTapUp(int index, OverlayItem item) {
-                        return false;
-                    }
+        item.setMarker(marker);
+        items.add(item);
 
-                    @Override
-                    public boolean onItemLongPress(int index, OverlayItem item) {
-                        return false;
-                    }
-                }, requireContext());
+        allGeoPointsOverlay = new ItemizedIconOverlay<>(items, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+            @Override
+            public boolean onItemSingleTapUp(int index, OverlayItem item) {
+                return false;
+            }
 
-                mapView.getOverlays().add(allGeoPointsOverlay);
+            @Override
+            public boolean onItemLongPress(int index, OverlayItem item) {
+                return false;
+            }
+        }, requireContext());
+
+        mapView.getOverlays().add(allGeoPointsOverlay);
 //                List<GeoPoint> list = new ArrayList<>(Data.INSTANCE.getGeoPoints().values());
 //                List<com.example.tag.Location> locations = new ArrayList<>();
 //                for (GeoPoint g : list ){
@@ -254,7 +256,6 @@ public class PlayFragment extends Fragment implements LocationListener {
 //                    locations.add(location);
 //                }
 //                addGeofences(locations);
-            });
 
 
 //
@@ -294,13 +295,13 @@ public class PlayFragment extends Fragment implements LocationListener {
     @Override
     public void onLocationChanged(@NonNull Location location) {
         Data.INSTANCE.setLocation(location);
-        if(isAdded()) {
+        if (isAdded()) {
             checkTarget(location);
         }
 
     }
 
-    public void checkTarget(Location l){
+    public void checkTarget(Location l) {
 //        Data.INSTANCE.getDistances().forEach((k, v) -> {
 //            if(v < 0.005 && !Data.INSTANCE.isTargetReached()){
 //                Toast.makeText(mainActivity, "you reached something", Toast.LENGTH_LONG).show();
@@ -311,7 +312,7 @@ public class PlayFragment extends Fragment implements LocationListener {
 //                DrawWayPoints();
 //            }
 //        });
-        if(Data.INSTANCE.getGeoPoint() != null) {
+        if (Data.INSTANCE.getGeoPoint() != null) {
             double lon1 = l.getLongitude();
             double lat1 = l.getLatitude();
 
@@ -344,12 +345,15 @@ public class PlayFragment extends Fragment implements LocationListener {
             double r = 6371;
             distance = c * r;
 
-            if (distance < 0.005) {
+            System.out.println(distance);
+            if (distance < 0.03) {
                 Data.INSTANCE.setGeoPoint(makeRandomGeoPoint());
+                Data.INSTANCE.setTagCounter(Data.INSTANCE.getTagCounter() + 1);
+                Toast.makeText(mainActivity, "Reached Point, new point has been made", Toast.LENGTH_SHORT).show();
                 DrawWayPoints();
             }
         } else {
-            GeoPoint geoPoint = new GeoPoint(4.776964947099206,51.58634557563859);
+            GeoPoint geoPoint = new GeoPoint(4.776964947099206, 51.58634557563859);
             Data.INSTANCE.setGeoPoint(geoPoint);
             DrawWayPoints();
         }

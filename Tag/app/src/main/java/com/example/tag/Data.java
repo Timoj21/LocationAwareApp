@@ -21,7 +21,7 @@ public enum Data {
     private LocationProximityListener locationProximityListener;
     private android.location.Location location;
     private GeoPoint geoPoint;
-    private HashMap<String, GeoPoint> geoPoints = new HashMap();
+    private ArrayList<GeoPoint> geoPoints = new ArrayList();
     private HashMap<String, Double> distances = new HashMap<>();
 
     private Double distance;
@@ -139,11 +139,11 @@ public enum Data {
         this.geoPoint = geoPoint;
     }
 
-    public HashMap<String, GeoPoint> getGeoPoints() {
+    public ArrayList<GeoPoint> getGeoPoints() {
         return geoPoints;
     }
 
-    public void setGeoPoints(HashMap<String, GeoPoint> geoPoints) {
+    public void setGeoPoints(ArrayList<GeoPoint> geoPoints) {
         this.geoPoints = geoPoints;
     }
 }

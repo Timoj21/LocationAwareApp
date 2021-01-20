@@ -38,15 +38,16 @@ public class Service extends android.app.Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //run();
 
-        Runnable runnable = new Runnable() {
+        /*Runnable runnable = new Runnable() {
             public void run() {
                 connectToServer();
             }
         };
 
         this.thread = new Thread(runnable);
-        thread.start();
+        thread.start();*/
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -54,6 +55,54 @@ public class Service extends android.app.Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+
+
+    public void run(){
+
+
+    }
+
+    public double calculateDistance(String location1, String location2){
+        String[] location1Array = location1.split(",");
+        double lon1 = Double.parseDouble(location1Array[0]);
+        double lat1 = Double.parseDouble(location1Array[1]);
+
+        String[] location2Array = location2.split(",");
+        double lon2 = Double.parseDouble(location2Array[0]);
+        double lat2 = Double.parseDouble(location2Array[1]);
+
+
+
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+        lon1 = Math.toRadians(lon1);
+        lon2 = Math.toRadians(lon2);
+
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2), 2);
+
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        double distance;
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+
+        //double r = 3956;
+        //distance = c * r;
+
+
+        double r = 6371;
+        distance = c * r;
+        /*if (distance <= 0.01) {
+            distance *= 1000;
+        }*/
+
+        return distance;
     }
 
     public void connectToServer() {
@@ -150,11 +199,11 @@ public class Service extends android.app.Service {
                             String ontsnapperLon = ontsnapperCoor[0];
                             String ontsnapperLat = ontsnapperCoor[1];
                             GeoPoint geoPoint = new GeoPoint(Double.parseDouble(ontsnapperLat), Double.parseDouble(ontsnapperLon));
-                            if (Data.INSTANCE.getGeoPoints().containsKey(ontsnapperID)) {
+                            /*if (Data.INSTANCE.getGeoPoints().containsKey(ontsnapperID)) {
                                 Data.INSTANCE.getGeoPoints().replace(ontsnapperID, Data.INSTANCE.getGeoPoints().get(ontsnapperID), geoPoint);
                             } else {
                                 Data.INSTANCE.getGeoPoints().put(ontsnapperID, geoPoint);
-                            }
+                            }*/
                             System.out.println(Data.INSTANCE.getGeoPoints().size());
 
                             break;
