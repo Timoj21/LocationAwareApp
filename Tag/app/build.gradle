@@ -44,7 +44,8 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
+    androidTestImplementation 'com.21buttons:fragment-test-rule:2.0.1'
+    androidTestImplementation 'androidx.test:rules:1.3.0-beta01'
     //osm
     implementation 'org.osmdroid:osmdroid-android:6.1.8'
 
