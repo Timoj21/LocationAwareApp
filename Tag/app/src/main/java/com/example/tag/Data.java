@@ -20,7 +20,7 @@ public enum Data {
     private Context context;
     private LocationProximityListener locationProximityListener;
     private android.location.Location location;
-    private GeoPoint geoPoint;
+    private GeoPoint geoPoint = new GeoPoint(Double.parseDouble("51.58634557563859"), Double.parseDouble("4.776964947099206"));;
     private ArrayList<GeoPoint> geoPoints = new ArrayList();
     private HashMap<String, Double> distances = new HashMap<>();
 

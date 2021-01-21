@@ -227,9 +227,9 @@ public class PlayFragment extends Fragment implements LocationListener {
 
         }
 
-        GeoPoint geoPoint = new GeoPoint(Double.parseDouble("51.58634557563859"), Double.parseDouble("4.776964947099206"));
-        Data.INSTANCE.setGeoPoint(geoPoint);
-        Data.INSTANCE.getGeoPoints().add(geoPoint);
+
+        Data.INSTANCE.setGeoPoint(Data.INSTANCE.getGeoPoint());
+        Data.INSTANCE.getGeoPoints().add(Data.INSTANCE.getGeoPoint());
 
         DrawWayPoints();
     }
