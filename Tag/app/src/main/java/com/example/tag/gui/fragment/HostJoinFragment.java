@@ -1,5 +1,6 @@
 package com.example.tag.gui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -9,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.tag.Data;
 import com.example.tag.R;
 import com.example.tag.gui.activity.LoginActivity;
+import com.example.tag.gui.activity.MainActivity;
 
 public class HostJoinFragment extends Fragment {
     private static final String TAG = HostJoinFragment.class.getSimpleName();
@@ -34,14 +37,31 @@ public class HostJoinFragment extends Fragment {
         this.hostGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginActivity.toHostFragment();
+                Data.INSTANCE.setPlayer("Tikker");
+                Data.INSTANCE.setPlayerId("123456");
+
+                Data.INSTANCE.load();
+
+
+                //TODO if connection failed, don't start next activity
+                Intent i = new Intent(getActivity(), MainActivity.class);
+                startActivity(i);
+                getActivity().finish();
             }
         });
 
         this.joinGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginActivity.toJoinFragment();
+                Data.INSTANCE.setPlayer("Tikker");
+                Data.INSTANCE.setPlayerId("123456");
+
+                Data.INSTANCE.loadNewGame();
+
+                //TODO if connection failed, don't start next activity
+                Intent i = new Intent(getActivity(), MainActivity.class);
+                startActivity(i);
+                getActivity().finish();
             }
         });
 

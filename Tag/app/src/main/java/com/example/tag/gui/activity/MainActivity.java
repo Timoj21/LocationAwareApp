@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Data.INSTANCE.setContext(this);
-        Data.INSTANCE.load();
 
 
         initialize();

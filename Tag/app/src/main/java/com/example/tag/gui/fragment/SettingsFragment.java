@@ -43,14 +43,14 @@ public class SettingsFragment extends Fragment {
 
         this.mainActivity = (MainActivity) getActivity();
 
-        this.gamePin = view.findViewById(R.id.settingsGamePin);
+        //this.gamePin = view.findViewById(R.id.settingsGamePin);
 
-        this.gamePin.setText("need to set game pin");
+        //this.gamePin.setText("need to set game pin");
 
         this.backButton = view.findViewById(R.id.settingsBackButton);
-        this.newGameButton = view.findViewById(R.id.newGameButton);
+        //this.newGameButton = view.findViewById(R.id.newGameButton);
 
-        this.dialogBuilder = new AlertDialog.Builder(getContext());
+        //this.dialogBuilder = new AlertDialog.Builder(getContext());
 
         this.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,17 +59,17 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        this.newGameButton.setOnClickListener(new View.OnClickListener() {
+        /*this.newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createNewGamePopup();
             }
-        });
+        });*/
 
         return view;
     }
 
-    public void createNewGamePopup(){
+    /*public void createNewGamePopup(){
         View popup = getLayoutInflater().inflate(R.layout.popup_new_game, null);
 
         this.yesButton = popup.findViewById(R.id.yesNewGameButton);
@@ -78,7 +78,14 @@ public class SettingsFragment extends Fragment {
         this.yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), LoginActivity.class);
+                Data.INSTANCE.setPlayer("Tikker");
+                Data.INSTANCE.setPlayerId("123456");
+
+
+                Data.INSTANCE.loadNewGame();
+
+                //TODO if connection failed, don't start next activity
+                Intent i = new Intent(getActivity(), MainActivity.class);
                 startActivity(i);
                 getActivity().finish();
             }
@@ -94,13 +101,13 @@ public class SettingsFragment extends Fragment {
         dialogBuilder.setView(popup);
         dialog = dialogBuilder.create();
         dialog.show();
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onDestroy() {
         super.onDestroy();
         if(dialog != null){
             dialog.dismiss();
         }
-    }
+    }*/
 }

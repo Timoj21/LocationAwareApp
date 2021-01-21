@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
+import com.example.tag.Data;
 import com.example.tag.gui.fragment.HostFragment;
 import com.example.tag.gui.fragment.HostJoinFragment;
 import com.example.tag.gui.fragment.JoinFragment;
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Data.INSTANCE.setContext(this);
 
         initialize();
     }

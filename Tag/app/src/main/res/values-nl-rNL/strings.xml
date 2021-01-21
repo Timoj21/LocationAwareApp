@@ -5,8 +5,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="host_join_text">Welkom bij Tag\nWat wil je doen?</string>
-    <string name="host_game">Host Game</string>
-    <string name="join_game">Join Game</string>
+    <string name="host_game">Ga Verder Met Spel</string>
+    <string name="join_game">Maak nieuw Spel</string>
 
     <string name="game_pin">Voer de spel code in:</string>
 
@@ -17,7 +17,7 @@
 
     <string name="settings">Instellingen</string>
     <string name="how_to_play_title">Hoe te spelen</string>
-    <string name="how_to_play_text">Hier nog tekst</string>
+    <string name="how_to_play_text">Je gaat naar de gegeven locatie toe en als je dichtbij genoeg bent dan krijg je een melding die zegt dat je er bent. Als je er bent dan gaat je score omhoog en er wordt een nieuwe locatie gemaakt om naartoe te gaan.</string>
     <string name="new_game_button">Nieuw spel</string>
     <string name="new_game_text">Als je een nieuw spel wil spelen, klik dan op de onderstaande knop</string>
 

@@ -4,8 +4,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="host_join_text">Welcome to Tag\nWhat would you like to do?</string>
-    <string name="host_game">Host Game</string>
-    <string name="join_game">Join Game</string>
+    <string name="host_game">Continue Game</string>
+    <string name="join_game">Start New Game</string>
 
     <string name="game_pin">Enter the game pin:</string>
 
@@ -16,7 +16,7 @@
 
     <string name="settings">Settings</string>
     <string name="how_to_play_title">How to play</string>
-    <string name="how_to_play_text">Hier nog tekst</string>
+    <string name="how_to_play_text">You go to the given location and when you are close enough a pop-up will tell you that you made it. When you made it your score goes up by 1 and a new location is made for you to go to.</string>
     <string name="new_game_button">New Game</string>
     <string name="new_game_text">If you want to start a new game, click the button below</string>
 

@@ -141,6 +141,7 @@ public enum Data {
 
     public void setGeoPoint(GeoPoint geoPoint) {
         this.geoPoint = geoPoint;
+        if (editor != null)
         editor.putString("geoPoint", geoPoint.toString());
     }
 
@@ -159,6 +160,14 @@ public enum Data {
         GeoPoint geoPointStandard = new GeoPoint(Double.parseDouble("51.58634557563859"), Double.parseDouble("4.776964947099206"));
         GeoPoint geoPointLoaded = GeoPoint.fromDoubleString(prefs.getString("geoPoint", String.valueOf(geoPointStandard)), ',') ;
         this.geoPoint = geoPointLoaded;
+
+    }
+
+    public void loadNewGame(){
+        SharedPreferences prefs = context.getSharedPreferences("Data", Context.MODE_PRIVATE);
+        this.editor = prefs.edit();
+        this.editor.clear();
+        this.editor.apply();
 
     }
 }
