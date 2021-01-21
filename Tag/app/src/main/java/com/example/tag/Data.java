@@ -1,6 +1,7 @@
 package com.example.tag;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 
 import org.osmdroid.util.GeoPoint;
@@ -20,11 +21,12 @@ public enum Data {
     private Context context;
     private LocationProximityListener locationProximityListener;
     private android.location.Location location;
-    private GeoPoint geoPoint = new GeoPoint(Double.parseDouble("51.58634557563859"), Double.parseDouble("4.776964947099206"));;
+    private GeoPoint geoPoint = new GeoPoint(Double.parseDouble("51.58634557563859"), Double.parseDouble("4.776964947099206"));
     private ArrayList<GeoPoint> geoPoints = new ArrayList();
     private HashMap<String, Double> distances = new HashMap<>();
 
     private Double distance;
+    private SharedPreferences.Editor editor;
 
 
     private int tagCounter = 0;
@@ -97,6 +99,8 @@ public enum Data {
 
     public void setTagCounter(int tagCounter) {
         this.tagCounter = tagCounter;
+        editor.putInt("tagCounter", tagCounter);
+        editor.apply();
     }
 
     public boolean isTargetReached() {
@@ -137,6 +141,7 @@ public enum Data {
 
     public void setGeoPoint(GeoPoint geoPoint) {
         this.geoPoint = geoPoint;
+        editor.putString("geoPoint", geoPoint.toString());
     }
 
     public ArrayList<GeoPoint> getGeoPoints() {
@@ -145,5 +150,15 @@ public enum Data {
 
     public void setGeoPoints(ArrayList<GeoPoint> geoPoints) {
         this.geoPoints = geoPoints;
+    }
+
+    public void load(){
+        SharedPreferences prefs = context.getSharedPreferences("Data", Context.MODE_PRIVATE);
+        this.editor = prefs.edit();
+        this.tagCounter = prefs.getInt("tagCounter", 0);
+        GeoPoint geoPointStandard = new GeoPoint(Double.parseDouble("51.58634557563859"), Double.parseDouble("4.776964947099206"));
+        GeoPoint geoPointLoaded = GeoPoint.fromDoubleString(prefs.getString("geoPoint", String.valueOf(geoPointStandard)), ',') ;
+        this.geoPoint = geoPointLoaded;
+
     }
 }

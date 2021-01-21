@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
+import com.example.tag.Data;
 import com.example.tag.gui.fragment.PlayFragment;
 import com.example.tag.R;
 import com.example.tag.gui.fragment.SettingsFragment;
@@ -22,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Data.INSTANCE.setContext(this);
+        Data.INSTANCE.load();
+
 
         initialize();
     }
