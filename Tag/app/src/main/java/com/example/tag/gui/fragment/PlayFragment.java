@@ -92,10 +92,10 @@ public class PlayFragment extends Fragment implements LocationListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        Context ctx = getContext();
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
+//
+//        Context ctx = getContext();
         //Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
         requestPermissionsIfNecessary(new String[]{
@@ -133,7 +133,7 @@ public class PlayFragment extends Fragment implements LocationListener {
             @Override
             public void onClick(View v) {
                 mapController.setCenter(locationOverlay.getMyLocation());
-                mapController.animateTo(locationOverlay.getMyLocation());
+                //mapController.animateTo(locationOverlay.getMyLocation());
                 mapController.zoomTo(19);
             }
         });
