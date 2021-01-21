@@ -27,17 +27,11 @@ public class SettingFragmentTest {
 
     }
 
-    @Test
-    public void splashActivityTestNewGameButton() {
-        mActivityTestRule.getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainFragmentContainer, new SettingsFragment()).commit();
-        onView(withId(R.id.newGameButton)).perform(click());
 
-    }
 
     @Test
     public void splashActivityTestTextViewsDisplayed() {
         mActivityTestRule.getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainFragmentContainer, new SettingsFragment()).commit();
-        onView(withId(R.id.textView6)).check(matches(isDisplayed()));
         onView(withId(R.id.textView2)).check(matches(isDisplayed()));
         onView(withId(R.id.textView)).check(matches(isDisplayed()));
         onView(withId(R.id.textView3)).check(matches(isDisplayed()));
