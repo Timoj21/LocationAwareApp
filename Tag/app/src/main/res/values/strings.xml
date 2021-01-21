@@ -26,5 +26,5 @@
     <string name="no">No</string>
 
     <string name="setting_pin">Game pin:</string>
-
+    <string name="toastTap">Walk towards here!</string>
 </resources>

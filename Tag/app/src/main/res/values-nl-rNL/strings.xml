@@ -27,4 +27,5 @@
     <string name="no">Nee</string>
 
     <string name="setting_pin">Spel code:</string>
+    <string name="toastTap">Loop hier naartoe!</string>
 </resources>

@@ -259,7 +259,7 @@ public class PlayFragment extends Fragment implements LocationListener {
         allGeoPointsOverlay = new ItemizedIconOverlay<>(overlayItems, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
             @Override
             public boolean onItemSingleTapUp(int index, OverlayItem item) {
-                Toast.makeText(getContext(), "Loop hier naartoe", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.toastTap, Toast.LENGTH_SHORT).show();
                 return true;
             }
 
