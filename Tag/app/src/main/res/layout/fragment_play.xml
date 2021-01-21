@@ -33,7 +33,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <!--<Button
             android:id="@+id/centerButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -41,7 +41,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
+-->
         <Button
             android:id="@+id/settingsButton"
             android:layout_width="50dp"

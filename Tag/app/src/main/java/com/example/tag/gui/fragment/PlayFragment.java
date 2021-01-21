@@ -120,7 +120,7 @@ public class PlayFragment extends Fragment implements LocationListener {
 
 
         this.settingsButton = view.findViewById(R.id.settingsButton);
-        this.centerButton = view.findViewById(R.id.centerButton);
+        //this.centerButton = view.findViewById(R.id.centerButton);
 
         this.settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,14 +129,14 @@ public class PlayFragment extends Fragment implements LocationListener {
             }
         });
 
-        this.centerButton.setOnClickListener(new View.OnClickListener() {
+        /*this.centerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mapController.setCenter(locationOverlay.getMyLocation());
                 //mapController.animateTo(locationOverlay.getMyLocation());
                 mapController.zoomTo(19);
             }
-        });
+        });*/
 
         return view;
     }
