@@ -39,15 +39,7 @@ public class DataTestClass {
         data.setGeoPoint(null);
         assertNull(data.getGeoPoint());
     }
-
-    @Test
-    public void testTagCounter(){
-        data.setTagCounter(10);
-        int expected = 10;
-        assertEquals(expected, data.getTagCounter());
-        data.setTagCounter(20);
-        assertNotEquals(expected, data.getTagCounter());
-    }
+    
 
     @Test
     public void testZoom(){
